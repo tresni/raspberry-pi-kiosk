@@ -39,11 +39,11 @@ sudo apt-get install x11-xserver-utils unclutter
 Now we need to install Chromium which is not available directly from Raspbian.  Instead, we are going to use the packages created by Ubuntu for ARM7 processors.
 
 ```
-wget https://launchpad.net/~canonical-chromium-builds/+archive/ubuntu/stage/+build/7916060/+files/chromium-browser_45.0.2454.85-0ubuntu0.15.04.1.1181_armhf.deb
-wget https://launchpad.net/~canonical-chromium-builds/+archive/ubuntu/stage/+build/7916060/+files/chromium-codecs-ffmpeg-extra_45.0.2454.85-0ubuntu0.15.04.1.1181_armhf.deb
+wget http://ports.ubuntu.com/pool/universe/c/chromium-browser/chromium-browser_45.0.2454.101-0ubuntu0.15.04.1.1183_armhf.deb
+wget http://ports.ubuntu.com/pool/universe/c/chromium-browser/chromium-codecs-ffmpeg-extra_45.0.2454.101-0ubuntu0.15.04.1.1183_armhf.deb
 
-dpkg -i chromium-codecs-ffmpeg-extra_45.0.2454.85-0ubuntu0.15.04.1.1181_armhf.deb
-dpkg -i chromium-browser_45.0.2454.85-0ubuntu0.15.04.1.1181_armhf.deb
+dpkg -i chromium-codecs-ffmpeg-extra_45.0.2454.101-0ubuntu0.15.04.1.1183_armhf.deb
+dpkg -i chromium-browser_45.0.2454.101-0ubuntu0.15.04.1.1183_armhf.deb
 ```
 
 The tools are installed. When the GUI starts up chromium needs to boot in kiosk-mode and open the webpage we filled in. In the next file we can add lines what needs to be executed at startup.
