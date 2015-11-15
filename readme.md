@@ -1,15 +1,17 @@
-#Create Raspberry Pi Kiosk on Raspbian Debian Wheezy#
+#Create Raspberry Pi Kiosk on Raspbian Debian Jessie on Raspberry Pi 2#
+This *will not* work on any Raspberry Pi model 1 (A, A+, B, B+).  This is only supported by the Raspberry Pi 2 which has the necessary ARM7 processor.
+
 With this tutorial you can create a 'fullscreen kiosk' which shows a webpage. This webpage will run in chromium. For the Epiphany Browser read [this article](https://github.com/elalemanyo/raspberry-pi-kiosk-screen#epiphany-browser) 
-## Install Raspbian Debian Wheezy ##
+## Install Raspbian Debian Jessie ##
 
 The first step is to install Raspbian on the Raspberry Pi. There are 2 ways to do this.
 
 - via the Raspberry Pi NOOBS image. (http://www.raspberrypi.org/help/noobs-setup/) Install the NOOBS image and install Raspbian via the NOOBS install manager
 - install directly the Raspbian image (http://www.raspberrypi.org/documentation/installation/installing-images/README.md)
 
-At the end you need a fresh Raspbian Debian Wheezy installed on your Raspberry Pi.
+At the end you need a fresh Raspbian Debian Jessie installed on your Raspberry Pi.
 
-##Configure Raspbian Debian Wheezy##
+##Configure Raspbian Debian Jessie##
 
 When starting Raspbian for the first time you will see the Raspi Config tool. 
 If it doesn't start automatically, you can do it manually with `sudo raspi-config`.
@@ -28,10 +30,20 @@ After rebooting the GUI environment will automatically startup and you will see 
 sudo apt-get update
 sudo apt-get upgrade
 ```
-Now we install the tools we need to perfectly show the webpage. The next command will install chromium (browser), x11 server utils and unclutter (to hide the cursor from the screen)
+Now we install the tools we need to perfectly show the webpage. The next command will install x11 server utils and unclutter (to hide the cursor from the screen)
 
 ```
-sudo apt-get install chromium x11-xserver-utils unclutter
+sudo apt-get install x11-xserver-utils unclutter
+```
+
+Now we need to install Chromium which is not available directly from Raspbian.  Instead, we are going to use the packages created by Ubuntu for ARM7 processors.
+
+```
+wget https://launchpad.net/~canonical-chromium-builds/+archive/ubuntu/stage/+build/7916060/+files/chromium-browser_45.0.2454.85-0ubuntu0.15.04.1.1181_armhf.deb
+wget https://launchpad.net/~canonical-chromium-builds/+archive/ubuntu/stage/+build/7916060/+files/chromium-codecs-ffmpeg-extra_45.0.2454.85-0ubuntu0.15.04.1.1181_armhf.deb
+
+dpkg -i chromium-codecs-ffmpeg-extra_45.0.2454.85-0ubuntu0.15.04.1.1181_armhf.deb
+dpkg -i chromium-browser_45.0.2454.85-0ubuntu0.15.04.1.1181_armhf.deb
 ```
 
 The tools are installed. When the GUI starts up chromium needs to boot in kiosk-mode and open the webpage we filled in. In the next file we can add lines what needs to be executed at startup.
@@ -39,18 +51,15 @@ The tools are installed. When the GUI starts up chromium needs to boot in kiosk-
 ```
 sudo nano /etc/xdg/lxsession/LXDE-pi/autostart
 ```
-(this has changed in Debian Wheezy. In the old versions it was /etc/xdg/lxsession/LXDE/autostart)
 
 The autostart files needs to look like this
 
 ```
-@lxpanel --profile LXDE
-@pcmanfm --desktop --profile LXDE
 @xset s off
 @xset -dpms
 @xset s noblank
 @sed -i 's/"exited_cleanly": false/"exited_cleanly": true/' ~/.config/chromium/Default/Preferences
-@chromium --noerrdialogs --kiosk http://www.page-to.display --incognito
+@chromium-browser --noerrdialogs --kiosk http://www.page-to.display --incognito
 ```
 
 The @xset options will disable the energy-options from the X-server so the screen won't be shut down after a x amount of time.
